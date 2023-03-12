@@ -7,16 +7,16 @@ import java.io.Serializable;
  */
 public class User implements Serializable{
     String email;
-    String fName;
-    String lName;
+    String firstName;
+    String lastName;
     String password;
     Role role;
     public User(){
     }
     public User(String email, String fName, String lName, String password, Role role){
         this.email = email;
-        this.fName = fName;
-        this.lName = lName;
+        this.firstName = fName;
+        this.lastName = lName;
         this.password = password;
         this.role = role;
     }
@@ -26,17 +26,17 @@ public class User implements Serializable{
     public void setEmail(String email){
         this.email = email;
     }
-    public String getFName(){
-        return this.fName;
+    public String getFirstName(){
+        return this.firstName;
     }
-    public void setFName(String fName){
-        this.fName = fName;
+    public void setFirstName(String firstName){
+        this.firstName = firstName;
     }
-    public String getLName(){
-        return this.lName;
+    public String getLastName(){
+        return this.lastName;
     }
-    public void setLName(String lName){
-        this.lName = lName;
+    public void setLastName(String lastName){
+        this.lastName = lastName;
     }
     public String getPass(){
         return this.password;
