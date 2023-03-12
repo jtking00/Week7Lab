@@ -11,9 +11,9 @@ public class User implements Serializable{
     String lName;
     String password;
     Role role;
-    User(){
+    public User(){
     }
-    User(String email, String fName, String lName, String password, Role role){
+    public User(String email, String fName, String lName, String password, Role role){
         this.email = email;
         this.fName = fName;
         this.lName = lName;
@@ -49,5 +49,9 @@ public class User implements Serializable{
     }
     public void setRole(Role role){
         this.role = role;
+    }
+    public int getUserRoleID(){
+        int roleId = this.role.getRoleId();
+        return roleId;
     }
 }
