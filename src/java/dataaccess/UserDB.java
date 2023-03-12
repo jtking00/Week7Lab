@@ -1,13 +1,9 @@
 package dataaccess;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 import models.User;
 import models.Role;
-import services.RoleService;
 /**
  * @author 882199
  */
@@ -20,7 +16,7 @@ public class UserDB {
         PreparedStatement ps = null;
         ResultSet rs = null;
         
-        String sql = "SELECT * FROM user";
+        String sql = "SELECT * FROM user JOIN role ON user.role = role.role_id";
         
         try{
             ps = con.prepareStatement(sql);
@@ -31,8 +27,8 @@ public class UserDB {
                 String lName = rs.getString(3);
                 String pass = rs.getString(4);
                 int roleId = rs.getInt(5);
-                RoleService rService = new RoleService();
-                Role curRole = rService.getRole(roleId);
+                String rName = rs.getString(7);
+                Role curRole = new Role(roleId, rName);
                 User user = new User(email,fName,lName,pass,curRole);
                 users.add(user);
             }
@@ -51,7 +47,7 @@ public class UserDB {
         PreparedStatement ps = null;
         ResultSet rs = null;
         
-        String sql = "SELECT * FROM user WHERE email=?";
+        String sql = "SELECT * FROM user JOIN role ON user.role = role.role_id WHERE email=?";
         
         try{
             ps = con.prepareStatement(sql);
@@ -62,8 +58,8 @@ public class UserDB {
                 String lName = rs.getString(3);
                 String pass = rs.getString(4);
                 int roleId = rs.getInt(5);
-                RoleService rService = new RoleService();
-                Role curRole = rService.getRole(roleId);
+                String rName = rs.getString(7);
+                Role curRole = new Role(roleId, rName);
                 user = new User(email,fName,lName,pass,curRole);
             }
         } finally {
@@ -87,7 +83,7 @@ public class UserDB {
             ps.setString(2, user.getFName());
             ps.setString(3, user.getLName());
             ps.setString(4, user.getPass());
-            ps.setInt(5, user.getUserRoleID());
+            ps.setInt(5, user.getRole().getRoleId());
             ps.executeUpdate();
         } finally {
             DBUtil.closePreparedStatement(ps);
@@ -107,7 +103,7 @@ public class UserDB {
             ps.setString(1, user.getFName());
             ps.setString(2, user.getLName());
             ps.setString(3, user.getPass());
-            ps.setInt(4, user.getUserRoleID());
+            ps.setInt(4, user.getRole().getRoleId());
             ps.setString(5, user.getEmail());
             ps.executeUpdate();
         } finally {

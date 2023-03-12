@@ -50,8 +50,4 @@ public class User implements Serializable{
     public void setRole(Role role){
         this.role = role;
     }
-    public int getUserRoleID(){
-        int roleId = this.role.getRoleId();
-        return roleId;
-    }
 }

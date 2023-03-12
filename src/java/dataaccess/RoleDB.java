@@ -1,10 +1,7 @@
 package dataaccess;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 import models.Role;
 /**
  * @author 882199
@@ -36,7 +33,7 @@ public class RoleDB {
         return roles;
     }
     public Role getRole(int roleId) throws Exception{
-        Role curRole = new Role();
+        Role curRole = null;
         ConnectionPool cp = ConnectionPool.getInstance();
         Connection con = cp.getConnection();
         PreparedStatement ps = null;
