@@ -14,6 +14,19 @@ public class Role implements Serializable{
         this.roleId = roleId;
         this.roleName = roleName;
     }
+    public Role(int id){
+        this.roleId = id;
+        switch(id){
+            case 1 : {
+                this.roleName = "system admin";
+                break;
+            }
+            case 2 : {
+                this.roleName = "regular user";
+                break;
+            }
+        }
+    }
     public int getRoleId(){
         return this.roleId;
     }

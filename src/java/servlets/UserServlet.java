@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import services.*;
@@ -29,7 +31,7 @@ public class UserServlet extends HttpServlet {
                         request.setAttribute("curUser", user);
                         request.setAttribute("curAction", "edit");
                     } catch(Exception e) {
-                        
+                        request.setAttribute("errorMsg", "Error occuered while editing");
                     }
                     break;
                 }
@@ -38,7 +40,7 @@ public class UserServlet extends HttpServlet {
                         String email = request.getParameter("email");
                         uService.deleteUser(email);
                     } catch(Exception e) {
-                        
+                        request.setAttribute("errorMsg", "Error occuered while deleting user");
                     }
                     break;
                 }
@@ -48,7 +50,7 @@ public class UserServlet extends HttpServlet {
             ArrayList<User> users = uService.getUsers();
             request.setAttribute("users", users);
         } catch(Exception e) {
-            
+            request.setAttribute("errorMsg", "Error occuered while loading users");
         }
         getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
     }
@@ -56,7 +58,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+       // HttpSession session = request.getSession();
         RoleService rService = new RoleService();
         UserService uService = new UserService();
         String action = request.getParameter("action");
@@ -68,6 +70,13 @@ public class UserServlet extends HttpServlet {
         String newRole = request.getParameter("newRole");
         if(newEmail == null || newEmail.equals("")|| newFirstName == null || newFirstName.equals("") || newLastName == null || newLastName.equals("") || newPass == null || newPass.equals("")){
             request.setAttribute("errorMsg", "All Fields are required");
+            action = null;
+            try {
+                ArrayList<User> users = uService.getUsers();
+                request.setAttribute("users", users);
+            } catch (Exception e) {
+            }
+            getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
         }
         if(action != null){
             switch(action){
@@ -75,23 +84,25 @@ public class UserServlet extends HttpServlet {
                     try {
                         ArrayList<User> users = uService.getUsers();
                         for(int i = 0; i < users.size(); i++){
-                            if(newEmail.equals(users.get(i).getEmail())){
+                            if(users.get(i).getEmail().equals(newEmail)){
                                 request.setAttribute("erroryMsg", "That email is already in use");
                             }
                         }
                         int newRoleId = Integer.parseInt(newRole);
-                        Role role = rService.getRole(newRoleId);;
+                        Role role = new Role(newRoleId);
                         uService.insertUser(newEmail, newFirstName, newLastName, newPass, role);
                     } catch(Exception e) {
-                        
+                        request.setAttribute("errorMsg", "Error occuered while adding user");
                     }
                     break;
                 }
                 case "update" : {
                     try{
-                        
+                        int newRoleId = Integer.parseInt(newRole);
+                        Role role = new Role(newRoleId);
+                        uService.updateUser(newEmail, newFirstName, newLastName, newPass, role);
                     } catch(Exception e) {
-                        
+                        request.setAttribute("errorMsg", "Error occuered while updating user");
                     }
                     break;
                 }

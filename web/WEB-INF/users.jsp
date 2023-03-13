@@ -14,7 +14,8 @@
     </head>
     <body>
         <h1>Manage Users</h1>
-        <table border="1">
+        <c:if test="${users.size() > 0}">
+            <table border="1">
             <tr>
                 <th>Email</th>
                 <th>First Name</th>
@@ -45,7 +46,13 @@
                     </td>
                 </tr>
             </c:forEach>
-        </table>
+            </table>
+        </c:if>
+        
+        <c:if test="${users.size() == 0}">
+            <h3>No users found. Please add a user.</h3>
+        </c:if>
+        
         <c:if test="${curUser eq null}">
             <h2>Add User</h2>
             <form method="post" action="users">
@@ -78,11 +85,11 @@
                         <option value="1">system admin</option>
                         <option value="2" selected>regular user</option>
                     </c:if>
-                </select>
+                </select><br>
                 <input type="submit" value="Update">
-                <input type="hidden" name="action" value="update">
-                <a href="/"><input type="submit" value="Cancel"></a>
+                <input type="hidden" name="action" value="update"> 
             </form>
+                <a href="/"><input type="submit" name="action" value="Cancel"></a>
         </c:if>
             <p>
                 ${errorMsg}
